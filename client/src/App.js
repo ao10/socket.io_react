@@ -24,7 +24,7 @@ class App extends Component {
     return (
       <div className="App">
         <input onChange={this.handleInput}>
-          {/* Send the input using a socket event. */}
+          
         </input>
       </div>
     );
