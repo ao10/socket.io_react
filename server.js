@@ -1,29 +1,22 @@
 const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
+const port = 8080
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')();
-const port = process.env.PORT || 8080;
+const server = http.createServer(app);
+const io = socketIO(server);
 
+io.on('connection', socket => {
+    console.log('User connected.');
 
-// app.get('/', (req, res) => {
-//     res.send({express: 'Hello from Express!'});
-// });
-
-io.on('connection', (socket) => {
-    // Here you can start emitting events to the client.
-    // client.on('subscribeToTimer', (interval) => {
-    //     console.log('Client is subscribing to timer with inteval', interval);
-    //     setInterval(() => {
-    //         client.emit('timer', new Date());            
-    //     }, interval);
-    // });
-    console.log('a user connected');
-    socket.on('disconnect', function(){
-        console.log('a user disconnected');
+    socket.on('change color', (color) => {
+        console.log('Color changed to: ', color);
+        io.sockets.emit('change color', color);
     })
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected.');
+    });
 });
 
-// io.listen(port);
-
-
-io.listen(port, () => console.log(`Listening on port ${port}`));
+server.listen(port, () => console.log(`Listening on port ${port}`));

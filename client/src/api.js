@@ -7,12 +7,15 @@ function join(name, cb){
 }
 
 
-function subscribeToTimer(cb){
+function subscribeToSocket(cb){
     // socket.on('timer', timestamp => cb(null, timestamp));
     // socket.emit('subscribeToTimer', 1000);
     socket.on('connect', function(){
         console.log('User connected');
     });
+
+    socket.on('message', socketMessage => cb(null, socketMessage));
+    socket.emit('subscribeToSocket', 1000);
 
     socket.on('event', function(data){
         console.log(data);
